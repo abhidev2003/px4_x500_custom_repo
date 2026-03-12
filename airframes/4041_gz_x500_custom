@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# @name Gazebo x500 Custom (Sensors + No-Calib)
+#
+# @type Quadrotor
+#
+
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=x500_custom}
+
+. ${R}etc/init.d-posix/airframes/4001_gz_x500
+
+# --------------------------------------------------------------------------------------------------
+# Sensor Configuration
+# --------------------------------------------------------------------------------------------------
+
+# Enable Optical Flow Fusion
+# Enable Optical Flow Fusion (Disabled for debug)
+param set-default EKF2_OF_CTRL 0
+
+# Collision Prevention
+# Enable CP module (needs distance sensor)
+param set-default CP_DIST 1.5
+
+# --------------------------------------------------------------------------------------------------
+# "Just Works" / No-Calibration Hacks
+# --------------------------------------------------------------------------------------------------
+
+# Disable Failsafes (GCS/RC Dependency Removal)
+param set-default NAV_DLL_ACT 0
+param set-default NAV_RCL_ACT 0
+
+# Disable Preflight Checks (Circuit Breakers)
+param set-default CBRK_SUPPLY_CHK 894281
+param set-default CBRK_USB_CHK 197848
+param set-default CBRK_IO_SAFETY 22027
+
+# Relax Prearm checks
+param set-default COM_PREARM_MODE 1
+param set-default COM_ARM_WO_GPS 1
+param set-default COM_ARM_MAG_STR -1
+param set-default COM_ARM_MAG_ANG -1
+
+# Mock Calibration IDs to avoid QGC Wizards
+# These specific IDs generally trick PX4 into thinking sensors are calib'd.
+param set-default CAL_ACC0_ID 1310988
+param set-default CAL_GYRO0_ID 1310988
+param set-default CAL_MAG0_ID 197388
+param set-default CAL_MAG1_ID 197644
+
+# Set sensors as calibrated
+param set-default CAL_ACC0_PRIO 50
+param set-default CAL_GYRO0_PRIO 50
+param set-default CAL_MAG0_PRIO 50
+param set-default CAL_MAG1_PRIO 50
+
+# Ensure QGC doesn't complain about uncalibrated sensors
+# (Simulated sensors usually are perfect, but the check logic needs IDs)
