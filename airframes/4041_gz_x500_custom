@@ -13,12 +13,18 @@ PX4_SIM_MODEL=${PX4_SIM_MODEL:=x500_custom}
 # Sensor Configuration
 # --------------------------------------------------------------------------------------------------
 
-# Enable Optical Flow Fusion
-# Enable Optical Flow Fusion (Disabled for debug)
-param set-default EKF2_OF_CTRL 0
+# Primary Altitude Source: Barometer (1)
+param set-default EKF2_HGT_REF 1
 
-# Collision Prevention
-# Enable CP module (needs distance sensor)
+# Enable Range Finder Fusion (For the VL53L0X and TFMini-S)
+# This allows PX4 to use the downward ToF sensor for precision altitude under 2m
+param set-default EKF2_RNG_CTRL 1
+
+# Enable Optical Flow Fusion (For the USB Cam)
+param set-default EKF2_OF_CTRL 1
+
+# Collision Prevention (For the TFMini-S Forward Lidar)
+# Enable CP module (Set stop distance to 1.5m)
 param set-default CP_DIST 1.5
 
 # --------------------------------------------------------------------------------------------------
