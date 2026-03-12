@@ -198,6 +198,9 @@ class DS4OffboardController(Node):
         msg.velocity     = [self.vx, self.vy, self.vz]
         msg.yawspeed     = self.yaw_rate
         msg.yaw          = float('nan')
+        # Frame 3 = VELOCITY_FRAME_BODY_NED (Forward-Right-Down)
+        # This ensures 'forward' joystick input moves the drone towards its nose, not geographic North.
+        msg.velocity_frame = 3
         msg.timestamp    = int(self.get_clock().now().nanoseconds / 1000)
         self.setpoint_pub.publish(msg)
 
